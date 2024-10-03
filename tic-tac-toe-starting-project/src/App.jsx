@@ -3,21 +3,30 @@ import { useState } from "react";
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
+import { WINNING_COMBINATIONS } from "./winning-combination";
+
+function deriveActivePlayer(gameTurns) {
+  let currentPlayer = 'X';
+
+  if(gameTurns.length > 0 && gameTurns[0].player === 'X') {
+    currentPlayer = 'O';
+  }
+
+  return currentPlayer;
+}
 
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
-  const [activePlayer, setActivePlayer] = useState('X');
+  // const [activePlayer, setActivePlayer] = useState('X');
+
+  const activePlayer = deriveActivePlayer(gameTurns);
 
   function handleSelectSquare( rowIndex, colIndex ) {
-    setActivePlayer(curActivePlayer => curActivePlayer === 'X' ? 'O' : 'X');
-    setGameTurns(prevTurn => {
-      let currentPlayer = 'X';
+    // setActivePlayer(curActivePlayer => curActivePlayer === 'X' ? 'O' : 'X');
+    setGameTurns(prevTurns => {
+      const currentPlayer = deriveActivePlayer(prevTurns);
 
-      if(prevTurn.length > 0 && prevTurn[0].player === 'X') {
-        currentPlayer = 'O';
-      }
-
-      const updatedTurns = [{ square: { row: rowIndex, col: colIndex }, player: activePlayer }, ...prevTurn];
+      const updatedTurns = [{ square: { row: rowIndex, col: colIndex }, player: activePlayer }, ...prevTurns];
 
       return updatedTurns;
     });
